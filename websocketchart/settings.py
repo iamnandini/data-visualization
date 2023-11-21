@@ -119,7 +119,7 @@ CHANNEL_LAYERS = {
 }
 
 
-# STATIC_ROOT = '/static/webc/main.js'
+STATIC_ROOT = '/static/main.js'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
