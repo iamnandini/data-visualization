@@ -1,0 +1,194 @@
+<!-- Code 2 -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body>
+    <h1>{{ value }}</h1>
+    <div class="canvasclass"><canvas id="myChart1" width="8" height="1" ></canvas></div>
+    <div class="canvasclass"><canvas id="myChart2" width="8" height="1" ></canvas></div>
+    <div class="canvasclass"><canvas id="myChart3" width="8" height="1" ></canvas></div>
+<script>
+    const ctx1 = document.getElementById('myChart1').getContext('2d');
+    const ctx2 = document.getElementById('myChart2').getContext('2d');
+    const ctx3 = document.getElementById('myChart3').getContext('2d');
+
+    var graphData1 = {
+        type: 'line',
+        data: {
+            labels: ['.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'], 
+            datasets: [{
+                label: 'Value1',
+                data: [1,2,1,2,3,3,3,3,3,3,3,3,3,3,3,3],
+                borderWidth: 1
+            }]
+        },
+        options: {} 
+    }
+
+    var graphData2 = {
+        type: 'line',
+        data: {
+            labels: ['.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'], 
+            datasets: [{
+                label: 'Value2',
+                data: [1,2,1,2,3,3,3,3,3,3,3,3,3,3,3,3],
+                borderWidth: 1
+            }]
+        },
+        options: {}
+    }
+
+    var graphData3 = {
+        type: 'line',
+        data: {
+            labels: ['.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'], 
+            datasets: [{
+                label: 'Value3',
+                data: [1,2,1,2,3,3,3,3,3,3,3,3,3,3,3,3],
+                borderWidth: 1
+            }]
+        },
+        options: {}
+    }
+
+    var myChart1 = new Chart(ctx1, graphData1);
+    var myChart2 = new Chart(ctx2, graphData2);
+    var myChart3 = new Chart(ctx3, graphData3);
+
+    var socket = new WebSocket('ws://localhost:8000/ws/graph/');
+
+    socket.onmessage = function(e){
+        var djangoData = JSON.parse(e.data);
+
+        // Value 1
+        var newGraphData = graphData1.data.datasets[0].data
+        newGraphData.shift();
+        newGraphData.push(djangoData.value);
+        graphData1.data.datasets[0].data = newGraphData;
+
+        // Value 2
+        var newGraphData2 = graphData2.data.datasets[0].data; 
+        newGraphData2.shift();
+        newGraphData2.push(djangoData.value2);
+        graphData2.data.datasets[0].data = newGraphData2;
+
+        // Value 3
+        var newGraphData3 = graphData3.data.datasets[0].data;
+        newGraphData3.shift();
+        newGraphData3.push(djangoData.value3);
+        graphData3.data.datasets[0].data = newGraphData3;
+
+        myChart1.update();
+        myChart2.update();
+        myChart3.update();
+    }
+</script>
+</body>
+</html> 
+
+
+
+
+<!-- {% load static %}
+<!DOCTYPE html>    
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>    
+<body>
+    <h1>{{ value }}</h1>
+    <div class="canvasclass"><canvas id="myChart1" width="4" height="1"></canvas></div>
+    <div class="canvasclass"><canvas id="myChart2" width="4" height="1"></canvas></div>
+    <div class="canvasclass"><canvas id="myChart3" width="4" height="1"></canvas></div>
+      <script>
+        const ctx1 = document.getElementById('myChart1');  
+        const ctx2 = document.getElementById('myChart2');
+        const ctx3 = document.getElementById('myChart3');
+        var graphData1 = {
+        type: 'line',    
+        data: {
+            labels: ['.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'], 
+            datasets: [{
+                label: 'Value1',
+                data: [1,2,1,2,3,3,3,3,3,3,3,3,3,3,3,3],
+                borderWidth: 1
+            }    
+        ]},    
+        options: {}
+        }
+        var graphData2 = {
+        type: 'line',    
+        data: {
+            labels: ['.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'], 
+            datasets: [{
+                label: 'Value1',
+                data: [1,2,1,2,3,3,3,3,3,3,3,3,3,3,3,3],
+                borderWidth: 1
+            }    
+        ]},    
+        options: {}
+        }
+        var graphData3 = {
+        type: 'line',    
+        data: {
+            labels: ['.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'], 
+            datasets: [{
+                label: 'Value1',
+                data: [1,2,1,2,3,3,3,3,3,3,3,3,3,3,3,3],
+                borderWidth: 1
+            }    
+        ]},    
+        options: {}
+        }
+
+        var myChart1 = new Chart(ctx1,graphData1);
+        var myChart2 = new Chart(ctx2,graphData2);
+        var myChart3 = new Chart(ctx3,graphData3);
+        var socket = new WebSocket('ws://localhost:8000/ws/graph/');
+
+        socket.onmessage = function(e){
+        var djangoData = JSON.parse(e.data);    
+        console.log(djangoData);
+
+        // value 1
+        var newGraphData = graphData1.data.datasets[0].data
+        newGraphData.shift();
+        newGraphData.push(djangoData.value);
+        graphData1.data.datasets[0].data = newGraphData;
+
+        // Value 2
+        var newGraphData2 = graphData2.data.datasets[1].data
+        newGraphData2.shift();
+        newGraphData2.push(djangoData.value2);
+        graphData2.data.datasets[1].data = newGraphData2;
+
+        // Value 3
+        var newGraphData3 = graphData3.data.datasets[2].data
+        newGraphData3.shift();
+        newGraphData3.push(djangoData.value3);
+        graphData3.data.datasets[2].data = newGraphData3;
+
+        myChart1.update();
+        myChart2.update();
+        myChart3.update();
+        }
+    </script>    
+    <!-- <script type="text/javascript" src="{% static 'webc/main.js' %}"></script> -->
+<!-- </body>
+</html>  -->    
+
+
+
+
+
