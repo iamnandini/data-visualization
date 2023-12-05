@@ -1,3 +1,4 @@
+
 const ctx1 = document.getElementById('myChart1').getContext('2d');
 const ctx2 = document.getElementById('myChart2').getContext('2d');
 const ctx3 = document.getElementById('myChart3').getContext('2d');
@@ -5,10 +6,10 @@ const ctx3 = document.getElementById('myChart3').getContext('2d');
 var graphData1 = {
     type: 'line',
     data: {
-        labels: ['.','.','.','.'], 
+        labels: [], 
         datasets: [{
             label: 'Value1',
-            data: [1,2,1,2],
+            data: [],
             borderWidth: 1
         }]
     },
@@ -18,10 +19,10 @@ var graphData1 = {
 var graphData2 = {
     type: 'line',
     data: {
-        labels: ['.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'], 
+        labels: [], 
         datasets: [{
             label: 'Value2',
-            data: [1,2,1,2,3,3,3,3,3,3,3,3,3,3,3,3],
+            data: [],
             borderWidth: 1
         }]
     },
@@ -51,43 +52,38 @@ socket.onmessage = function(e){
     var djangoData = JSON.parse(e.data);
 
     // Value 1
-    var newGraphData = graphData1.data.datasets[0].data;
-    newGraphData.shift();
-    newGraphData.push(djangoData.value);
-    graphData1.data.datasets[0].data = newGraphData;
-
-    // Value 2
-    var newGraphData = graphData1.data.datasets[0].data;
-    newGraphData.shift();
-    newGraphData.push(djangoData.value);
-    graphData1.data.datasets[0].data = newGraphData;
+    var newGraphData1 = graphData1.data.datasets[0].data;
+    newGraphData1.shift();
+    newGraphData1.push(djangoData.value);
+    graphData1.data.datasets[0].data = newGraphData1;
     
-    // // label values in 2
-    // var newGraphvalue2 = graphData2.data.labels; 
-    // newGraphvalue2.shift();
-    // newGraphvalue2.push(djangoData.realtime);
-    // graphData2.data.labels = newGraphvalue2;
-
+    // Value 2
+    var newGraphData2 = graphData2.data.datasets[0].data;
+    newGraphData2.shift();
+    newGraphData2.push(djangoData.value);
+    graphData2.data.datasets[0].data = newGraphData2;
+    
     // Value 3
     var newGraphData3 = graphData3.data.datasets[0].data;
     newGraphData3.shift();
     newGraphData3.push(djangoData.value3);
     graphData3.data.datasets[0].data = newGraphData3;
-
-// Assume you receive new data from the WebSocket like this
-// var newData = 4;
-
-// Update the chart data and labels
-// graphData3.data.datasets[0].data.push(newData);
-// graphData3.data.labels.push('5');
-
-// Limit the number of data points to, for example, 15
-// if (graphData3.data.datasets[0].data.length > 15) {
-//     graphData3.data.datasets[0].data.shift();
-//     graphData3.data.labels.shift();
-// }
-
+    
+    // Adding new label
+    var newLabel = djangoData.realtime;
+    graphData1.data.labels.push(newLabel);
+    graphData2.data.labels.push(newLabel);
+    graphData3.data.labels.push(newLabel);
+    
+    // Limiting the number of data points to,  15
+    if (graphData1.data.labels.length > 15) {
+        graphData1.data.labels.shift();
+        graphData2.data.labels.shift();
+        graphData3.data.labels.shift();
+    }
+    
     myChart1.update();
     myChart2.update();
     myChart3.update();
 }
+
